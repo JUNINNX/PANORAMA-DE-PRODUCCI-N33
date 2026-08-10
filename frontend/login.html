@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Acceso · Panorama de Producción</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:linear-gradient(135deg,#db0606,#0c0000);display:flex;align-items:center;justify-content:center;padding:20px;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.card{width:min(420px,100%);background:#fff;border-radius:20px;padding:34px;box-shadow:0 25px 70px rgba(0,0,0,.35)}
+.brand{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#660606;margin-bottom:10px}
+h1{margin:0 0 8px;color:#8a0404;font-size:28px}
+.subtitle{margin:0 0 26px;color:#64748b}
+label{display:block;margin:15px 0 7px;font-size:14px;font-weight:700;color:#5a0909}
+input{width:100%;padding:13px 14px;border:1px solid #cbd5e1;border-radius:10px;font-size:15px;outline:none}
+input:focus{border-color:#8b6464;box-shadow:0 0 0 3px rgba(110, 9, 9, 0.144)}
+button{width:100%;margin-top:22px;padding:13px;border:0;border-radius:10px;background:#520303;color:white;font-weight:800;font-size:15px;cursor:pointer}
+button:disabled{opacity:.65;cursor:wait}
+.error{display:none;margin-top:15px;padding:11px;border-radius:10px;background:#fee2e2;color:#991b1b;font-size:14px}
+.footer{margin-top:20px;text-align:center;color:#94a3b8;font-size:12px}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="brand">Acceso seguro</div>
+  <h1>Panorama de Producción</h1>
+  <p class="subtitle">Ingresa tus credenciales para continuar.</p>
+
+  <form id="loginForm">
+    <label for="username">Usuario</label>
+    <input id="username" name="username" type="text" autocomplete="username" required autofocus>
+
+    <label for="password">Contraseña</label>
+    <input id="password" name="password" type="password" autocomplete="current-password" required>
+
+    <button id="loginButton" type="submit">Ingresar</button>
+    <div id="error" class="error"></div>
+  </form>
+
+  <div class="footer">Sistema interno · Panorama de Producción</div>
+</div>
+
+<script>
+const API_BASE = '/api';
+
+if (sessionStorage.getItem('panorama_access_token')) {
+  fetch(API_BASE + '/auth/me', {
+    headers: { Authorization: 'Bearer ' + sessionStorage.getItem('panorama_access_token') }
+  }).then(r => {
+    if (r.ok) window.location.replace('panorama.html');
+    else sessionStorage.removeItem('panorama_access_token');
+  }).catch(() => {});
+}
+
+document.getElementById('loginForm').addEventListener('submit', async (event) => {
+  event.preventDefault();
+
+  const button = document.getElementById('loginButton');
+  const error = document.getElementById('error');
+  error.style.display = 'none';
+  button.disabled = true;
+  button.textContent = 'Ingresando...';
+
+  try {
+    const response = await fetch(API_BASE + '/auth/login', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        username: document.getElementById('username').value.trim(),
+        password: document.getElementById('password').value
+      })
+    });
+
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(data.message || 'Usuario o contraseña incorrectos.');
+    }
+
+    sessionStorage.setItem('panorama_access_token', data.token);
+    window.location.replace('panorama.html');
+  } catch (err) {
+    error.textContent = err.message || 'No se pudo conectar con el servidor.';
+    error.style.display = 'block';
+  } finally {
+    button.disabled = false;
+    button.textContent = 'Ingresar';
+  }
+});
+</script>
+</body>
+</html>
