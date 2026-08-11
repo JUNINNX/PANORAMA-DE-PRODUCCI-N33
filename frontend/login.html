@@ -3,90 +3,885 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Acceso · Panorama de Producción</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
 <style>
-*{box-sizing:border-box}
-body{margin:0;min-height:100vh;background:linear-gradient(135deg,#db0606,#0c0000);display:flex;align-items:center;justify-content:center;padding:20px;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-.card{width:min(420px,100%);background:#fff;border-radius:20px;padding:34px;box-shadow:0 25px 70px rgba(0,0,0,.35)}
-.brand{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#660606;margin-bottom:10px}
-h1{margin:0 0 8px;color:#8a0404;font-size:28px}
-.subtitle{margin:0 0 26px;color:#64748b}
-label{display:block;margin:15px 0 7px;font-size:14px;font-weight:700;color:#5a0909}
-input{width:100%;padding:13px 14px;border:1px solid #cbd5e1;border-radius:10px;font-size:15px;outline:none}
-input:focus{border-color:#8b6464;box-shadow:0 0 0 3px rgba(110, 9, 9, 0.144)}
-button{width:100%;margin-top:22px;padding:13px;border:0;border-radius:10px;background:#520303;color:white;font-weight:800;font-size:15px;cursor:pointer}
-button:disabled{opacity:.65;cursor:wait}
-.error{display:none;margin-top:15px;padding:11px;border-radius:10px;background:#fee2e2;color:#991b1b;font-size:14px}
-.footer{margin-top:20px;text-align:center;color:#94a3b8;font-size:12px}
-</style>
-</head>
-<body>
-<div class="card">
-  <div class="brand">Acceso seguro</div>
-  <h1>Panorama de Producción</h1>
-  <p class="subtitle">Ingresa tus credenciales para continuar.</p>
 
-  <form id="loginForm">
-    <label for="username">Usuario</label>
-    <input id="username" name="username" type="text" autocomplete="username" required autofocus>
+/* ==============================
+   CONFIGURACIÓN GENERAL
+================================ */
 
-    <label for="password">Contraseña</label>
-    <input id="password" name="password" type="password" autocomplete="current-password" required>
-
-    <button id="loginButton" type="submit">Ingresar</button>
-    <div id="error" class="error"></div>
-  </form>
-
-  <div class="footer">Sistema interno · Panorama de Producción</div>
-</div>
-
-<script>
-const API_BASE = '/api';
-
-if (sessionStorage.getItem('panorama_access_token')) {
-  fetch(API_BASE + '/auth/me', {
-    headers: { Authorization: 'Bearer ' + sessionStorage.getItem('panorama_access_token') }
-  }).then(r => {
-    if (r.ok) window.location.replace('panorama.html');
-    else sessionStorage.removeItem('panorama_access_token');
-  }).catch(() => {});
+* {
+    box-sizing: border-box;
 }
 
-document.getElementById('loginForm').addEventListener('submit', async (event) => {
-  event.preventDefault();
+html,
+body {
+    margin: 0;
+    min-height: 100%;
+}
 
-  const button = document.getElementById('loginButton');
-  const error = document.getElementById('error');
-  error.style.display = 'none';
-  button.disabled = true;
-  button.textContent = 'Ingresando...';
+body {
 
-  try {
-    const response = await fetch(API_BASE + '/auth/login', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({
-        username: document.getElementById('username').value.trim(),
-        password: document.getElementById('password').value
-      })
-    });
+    min-height: 100vh;
 
-    const data = await response.json().catch(() => ({}));
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    if (!response.ok) {
-      throw new Error(data.message || 'Usuario o contraseña incorrectos.');
+    padding: 20px;
+
+    font-family: "Poppins", Arial, sans-serif;
+
+    /*
+      IMPORTANTE:
+      Esta imagen debe estar dentro de la carpeta Interfaz.
+    */
+    background-image:
+        linear-gradient(
+            rgba(0,0,0,0.08),
+            rgba(0,0,0,0.08)
+        ),
+        url("fondo_panorama.png");
+
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    background-attachment: fixed;
+
+    overflow: hidden;
+}
+
+
+/* ==============================
+   LOGO SUPERIOR IZQUIERDO
+================================ */
+
+.topbar {
+
+    position: fixed;
+
+    top: 20px;
+    left: 20px;
+
+    z-index: 20;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    color: white;
+}
+
+
+/* Logo rojo */
+
+.topbar-logo {
+
+    width: 28px;
+    height: 38px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+}
+
+.topbar-logo img {
+
+    width: 27px;
+    height: 36px;
+
+    object-fit: contain;
+
+    display: block;
+}
+
+
+/* Texto PANORAMA */
+
+.topbar-title {
+
+    font-family: "Oswald", Arial, sans-serif;
+
+    font-size: 19px;
+
+    font-weight: 700;
+
+    line-height: 1;
+
+    letter-spacing: 0.01em;
+
+    white-space: nowrap;
+
+    color: #ffffff;
+
+    text-shadow:
+        0 2px 5px rgba(0,0,0,0.8);
+}
+
+
+/* PRO */
+
+.topbar-title .pro {
+
+    color: #e30613;
+}
+
+
+/* ==============================
+   TARJETA DEL LOGIN
+================================ */
+
+.card {
+
+    position: relative;
+
+    z-index: 10;
+
+    width: min(500px, calc(100vw - 40px));
+
+    background: rgba(250,250,250,0.98);
+
+    border-radius: 17px;
+
+    padding: 38px 34px 24px;
+
+    border: 1px solid rgba(255,255,255,0.7);
+
+    box-shadow:
+        0 25px 60px rgba(0,0,0,0.45),
+        0 5px 20px rgba(0,0,0,0.2);
+}
+
+
+/* Línea roja superior */
+
+.card::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+
+    left: 34px;
+    right: 34px;
+
+    height: 3px;
+
+    background: #d00000;
+
+    border-radius: 0 0 5px 5px;
+}
+
+
+/* ==============================
+   TEXTO SUPERIOR
+================================ */
+
+.brand {
+
+    margin-bottom: 13px;
+
+    text-align: center;
+
+    color: #b00000;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.30em;
+
+    text-transform: uppercase;
+}
+
+
+/* ==============================
+   TITULO
+================================ */
+
+h1 {
+
+    margin: 0 0 8px;
+
+    text-align: center;
+
+    color: #252a30;
+
+    font-size: 29px;
+
+    line-height: 1.15;
+
+    font-weight: 800;
+}
+
+
+/* ==============================
+   SUBTITULO
+================================ */
+
+.subtitle {
+
+    margin: 0 0 25px;
+
+    text-align: center;
+
+    color: #7d8793;
+
+    font-size: 14px;
+
+    font-weight: 400;
+}
+
+
+/* ==============================
+   CAMPOS
+================================ */
+
+label {
+
+    display: block;
+
+    margin: 15px 0 7px;
+
+    color: #252a30;
+
+    font-size: 14px;
+
+    font-weight: 700;
+}
+
+
+input {
+
+    width: 100%;
+
+    height: 50px;
+
+    padding: 0 14px;
+
+    border: 1px solid #d1d8df;
+
+    border-radius: 9px;
+
+    background: #ffffff;
+
+    color: #252a30;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+input::placeholder {
+
+    color: #9aa3ad;
+}
+
+
+input:focus {
+
+    border-color: #b00000;
+
+    box-shadow:
+        0 0 0 3px rgba(176,0,0,0.10);
+}
+
+
+/* ==============================
+   BOTÓN
+================================ */
+
+button {
+
+    width: 100%;
+
+    margin-top: 23px;
+
+    height: 50px;
+
+    border: 0;
+
+    border-radius: 9px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #e30613 0%,
+            #bd0000 100%
+        );
+
+    color: white;
+
+    font-family: inherit;
+
+    font-size: 15px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 8px 18px rgba(170,0,0,0.28);
+
+    transition:
+        transform 0.15s ease,
+        filter 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+
+button:hover {
+
+    transform: translateY(-1px);
+
+    filter: brightness(1.05);
+
+    box-shadow:
+        0 10px 22px rgba(170,0,0,0.35);
+}
+
+
+button:active {
+
+    transform: translateY(0);
+}
+
+
+button:disabled {
+
+    opacity: 0.65;
+
+    cursor: wait;
+
+    transform: none;
+}
+
+
+/* ==============================
+   ERROR
+================================ */
+
+.error {
+
+    display: none;
+
+    margin-top: 14px;
+
+    padding: 10px 12px;
+
+    border-radius: 9px;
+
+    background: #fee2e2;
+
+    color: #991b1b;
+
+    font-size: 13px;
+}
+
+
+/* ==============================
+   PIE
+================================ */
+
+.footer {
+
+    margin-top: 23px;
+
+    padding-top: 16px;
+
+    border-top: 1px solid #e1e5e9;
+
+    text-align: center;
+
+    color: #7a8590;
+
+    font-size: 12px;
+}
+
+
+/* ==============================
+   CELULARES
+================================ */
+
+@media (max-width: 600px) {
+
+    body {
+
+        padding: 15px;
+
+        background-attachment: scroll;
     }
 
-    sessionStorage.setItem('panorama_access_token', data.token);
-    window.location.replace('panorama.html');
-  } catch (err) {
-    error.textContent = err.message || 'No se pudo conectar con el servidor.';
-    error.style.display = 'block';
-  } finally {
-    button.disabled = false;
-    button.textContent = 'Ingresar';
-  }
-});
+
+    .topbar {
+
+        top: 14px;
+
+        left: 15px;
+    }
+
+
+    .topbar-logo {
+
+        width: 25px;
+        height: 34px;
+    }
+
+
+    .topbar-logo img {
+
+        width: 24px;
+        height: 32px;
+    }
+
+
+    .topbar-title {
+
+        font-size: 16px;
+    }
+
+
+    .card {
+
+        width: 100%;
+
+        padding: 32px 22px 22px;
+    }
+
+
+    .card::before {
+
+        left: 22px;
+        right: 22px;
+    }
+
+
+    h1 {
+
+        font-size: 25px;
+    }
+}
+
+
+@media (max-width: 400px) {
+
+    .topbar-title {
+
+        font-size: 14px;
+    }
+
+
+    .card {
+
+        padding: 30px 19px 20px;
+    }
+
+
+    h1 {
+
+        font-size: 23px;
+    }
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     LOGO Y TÍTULO SUPERIOR
+     NO AFECTA EL BACKEND
+====================================================== -->
+
+<div class="topbar">
+
+    <div class="topbar-logo">
+
+        <!--
+          IMPORTANTE:
+          Debes subir logo_icono.png dentro de Interfaz/
+        -->
+
+        <img
+            src="logo_icono.png"
+            alt="Logo"
+        >
+
+    </div>
+
+
+    <div class="topbar-title">
+
+        PANORAMA DE PRODUCCIÓN ·
+
+        <span class="pro">
+            PRO
+        </span>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     TARJETA DE LOGIN
+====================================================== -->
+
+<div class="card">
+
+
+    <div class="brand">
+        Acceso seguro
+    </div>
+
+
+    <h1>
+        Panorama de Producción
+    </h1>
+
+
+    <p class="subtitle">
+        Ingresa tus credenciales para continuar.
+    </p>
+
+
+
+    <!-- =================================================
+         FORMULARIO
+         MANTENEMOS LOS MISMOS ID
+         PARA NO AFECTAR EL JAVASCRIPT
+    ================================================== -->
+
+    <form id="loginForm">
+
+
+        <label for="username">
+            Usuario
+        </label>
+
+
+        <input
+            id="username"
+            name="username"
+            type="text"
+            autocomplete="username"
+            placeholder="Ingresa tu usuario"
+            required
+            autofocus
+        >
+
+
+
+        <label for="password">
+            Contraseña
+        </label>
+
+
+        <input
+            id="password"
+            name="password"
+            type="password"
+            autocomplete="current-password"
+            placeholder="Ingresa tu contraseña"
+            required
+        >
+
+
+
+        <button
+            id="loginButton"
+            type="submit"
+        >
+            Ingresar
+        </button>
+
+
+        <div
+            id="error"
+            class="error"
+        ></div>
+
+
+    </form>
+
+
+
+    <div class="footer">
+
+        Sistema interno · Panorama de Producción
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+/*
+=========================================================
+IMPORTANTE
+
+ESTA PARTE SE MANTIENE IGUAL QUE TU LOGIN ORIGINAL.
+
+NO CAMBIAMOS:
+
+/api
+/auth/login
+/auth/me
+username
+password
+panorama_access_token
+panorama.html
+
+=========================================================
+*/
+
+
+const API_BASE = '/api';
+
+
+
+/*
+=========================================================
+COMPROBAR SI YA EXISTE UNA SESIÓN
+=========================================================
+*/
+
+if (sessionStorage.getItem('panorama_access_token')) {
+
+    fetch(
+        API_BASE + '/auth/me',
+        {
+            headers: {
+                Authorization:
+                    'Bearer ' +
+                    sessionStorage.getItem(
+                        'panorama_access_token'
+                    )
+            }
+        }
+    )
+
+    .then(response => {
+
+        if (response.ok) {
+
+            window.location.replace(
+                'panorama.html'
+            );
+
+        } else {
+
+            sessionStorage.removeItem(
+                'panorama_access_token'
+            );
+
+        }
+
+    })
+
+    .catch(() => {});
+
+}
+
+
+
+/*
+=========================================================
+INICIO DE SESIÓN
+
+ESTA ES LA MISMA LÓGICA DE TU LOGIN ANTERIOR
+=========================================================
+*/
+
+document
+    .getElementById('loginForm')
+    .addEventListener(
+        'submit',
+        async (event) => {
+
+            event.preventDefault();
+
+
+            const button =
+                document.getElementById(
+                    'loginButton'
+                );
+
+
+            const error =
+                document.getElementById(
+                    'error'
+                );
+
+
+            error.style.display = 'none';
+
+
+            button.disabled = true;
+
+            button.textContent =
+                'Ingresando...';
+
+
+
+            try {
+
+
+                /*
+                =========================================
+                ENVÍA LAS MISMAS CREDENCIALES
+                =========================================
+                */
+
+                const response =
+                    await fetch(
+                        API_BASE +
+                        '/auth/login',
+                        {
+
+                            method: 'POST',
+
+                            headers: {
+                                'Content-Type':
+                                    'application/json'
+                            },
+
+                            body:
+                                JSON.stringify({
+
+                                    username:
+                                        document
+                                            .getElementById(
+                                                'username'
+                                            )
+                                            .value
+                                            .trim(),
+
+                                    password:
+                                        document
+                                            .getElementById(
+                                                'password'
+                                            )
+                                            .value
+
+                                })
+
+                        }
+                    );
+
+
+
+                const data =
+                    await response
+                        .json()
+                        .catch(
+                            () => ({})
+                        );
+
+
+
+                /*
+                =========================================
+                ERROR DE AUTENTICACIÓN
+                =========================================
+                */
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.message ||
+                        'Usuario o contraseña incorrectos.'
+                    );
+
+                }
+
+
+
+                /*
+                =========================================
+                GUARDAR TOKEN
+
+                MISMO NOMBRE QUE TU LOGIN ORIGINAL
+                =========================================
+                */
+
+                sessionStorage.setItem(
+                    'panorama_access_token',
+                    data.token
+                );
+
+
+
+                /*
+                =========================================
+                ENTRAR AL PANORAMA
+                =========================================
+                */
+
+                window.location.replace(
+                    'panorama.html'
+                );
+
+
+            }
+
+
+            catch (err) {
+
+
+                error.textContent =
+                    err.message ||
+                    'No se pudo conectar con el servidor.';
+
+
+                error.style.display =
+                    'block';
+
+
+            }
+
+
+            finally {
+
+
+                button.disabled =
+                    false;
+
+
+                button.textContent =
+                    'Ingresar';
+
+            }
+
+        }
+    );
+
 </script>
+
 </body>
 </html>
