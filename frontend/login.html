@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<script>
+(() => {
+  const preference = localStorage.getItem('panorama_login_theme') || 'auto';
+  const hour = new Date().getHours();
+  document.documentElement.dataset.loginTheme = preference === 'auto'
+    ? (hour >= 18 || hour < 7 ? 'dark' : 'light')
+    : preference;
+})();
+</script>
+<script src="tema-login-vista-previa.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Acceso · Panorama de Producción</title>
@@ -735,3 +745,4 @@ document
 </script>
 </body>
 </html>
+
