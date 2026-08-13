@@ -283,6 +283,71 @@ document.addEventListener('DOMContentLoaded', async function() {
   (() => {
     'use strict';
 
+    /* El panel original se reconstruye desde la plantilla incluida. Inserta las
+       mejoras dentro de esa plantilla antes de que se muestre al usuario. */
+    (function injectIntoRenderedPanel() {
+      const templateElement = document.querySelector('script[type="__bundler/template"]');
+      if (!templateElement) return;
+
+      const integratedPanelCode = String.raw`
+        (() => {
+          'use strict';
+          function startIntegratedPanel() {
+            const loader = document.getElementById('loading');
+            const toolbar = document.querySelector('.htools.noprint');
+            if (!loader || !toolbar) { window.setTimeout(startIntegratedPanel, 60); return; }
+            if (toolbar.dataset.integratedReady === 'true') return;
+            if (document.documentElement.dataset.integratedPanelReady === 'true') return;
+            document.documentElement.dataset.integratedPanelReady = 'true';
+
+            const style = document.createElement('style');
+            style.textContent = '.loading{background:radial-gradient(circle at 50% 42%,rgba(225,6,0,.10),transparent 34%),var(--bg)!important;gap:15px!important}.loading.integrated-load-hold,.loading.integrated-load-hold.hide{display:flex!important}.integrated-bars{align-items:end;display:flex;gap:6px;height:44px}.integrated-bars i{animation:integratedLoad .8s ease-in-out infinite alternate;background:linear-gradient(180deg,var(--acc),var(--ferrari-dk));border-radius:4px 4px 2px 2px;box-shadow:0 4px 12px rgba(225,6,0,.22);display:block;width:10px}.integrated-bars i:nth-child(1){animation-delay:-.35s;height:18px}.integrated-bars i:nth-child(2){animation-delay:-.18s;height:31px}.integrated-bars i:nth-child(3){height:43px}.integrated-load-copy{text-align:center}.integrated-load-copy strong{color:var(--txt);display:block;font-family:Oswald,sans-serif;font-size:18px;font-weight:600;letter-spacing:.7px;text-transform:uppercase}.integrated-load-copy p{color:var(--txt2);font-family:IBM Plex Mono,monospace;font-size:12px;margin:6px 0 0}@keyframes integratedLoad{from{filter:brightness(.76);transform:scaleY(.72);transform-origin:bottom}to{filter:brightness(1.13);transform:scaleY(1);transform-origin:bottom}}.integrated-toolbar{position:relative}.integrated-menu{position:relative;z-index:80}.integrated-menu-trigger{align-items:center;background:var(--panel);border:1px solid var(--line2);border-radius:10px;color:var(--txt);cursor:pointer;display:inline-flex;font-family:Oswald,sans-serif;font-size:13px;font-weight:600;gap:8px;letter-spacing:.5px;padding:11px 16px;text-transform:uppercase}.integrated-menu-trigger:hover,.integrated-menu.open .integrated-menu-trigger{border-color:var(--acc);color:var(--acc)}.integrated-menu-trigger svg{fill:none;height:15px;stroke:currentColor;stroke-linecap:round;stroke-width:2;width:15px}.integrated-menu-panel{background:var(--panel);border:1px solid var(--line2);border-radius:12px;box-shadow:0 14px 32px rgba(20,22,26,.18);display:none;left:0;min-width:220px;padding:7px;position:absolute;top:calc(100% + 8px)}.integrated-menu.open .integrated-menu-panel{display:grid;gap:4px}.integrated-menu-panel .btn{box-shadow:none;justify-content:flex-start;text-decoration:none;width:100%}.integrated-logout{background:#b91c1c!important;box-shadow:0 2px 8px rgba(185,28,28,.2)!important}.integrated-logout:hover{background:#991b1b!important}@media(max-width:760px){.integrated-toolbar{display:grid;gap:8px;grid-template-columns:repeat(2,minmax(0,1fr));width:100%}.integrated-menu,.integrated-menu-trigger,.integrated-toolbar>.btn{min-width:0;width:100%}.integrated-menu-trigger,.integrated-toolbar>.btn{font-size:11px;justify-content:center;padding:10px 8px}.integrated-menu-panel{left:0;min-width:0;right:0;width:100%}}@media(prefers-reduced-motion:reduce){.integrated-bars i{animation:none}}';
+            document.head.append(style);
+
+            loader.setAttribute('role', 'status');
+            loader.setAttribute('aria-live', 'polite');
+            loader.classList.add('integrated-load-hold');
+            loader.innerHTML = '<div class="integrated-bars" aria-hidden="true"><i></i><i></i><i></i></div><div class="integrated-load-copy"><strong>Preparando panorama</strong><p>Cargando indicadores y gráficos…</p></div>';
+            window.setTimeout(() => loader.classList.remove('integrated-load-hold'), 950);
+
+            const actions = Array.from(toolbar.children);
+            const menuLinks = actions.filter((action) => action.matches('a[href]'));
+            const visibleButtons = actions.filter((action) => !menuLinks.includes(action));
+            const menu = document.createElement('div');
+            menu.className = 'integrated-menu';
+            menu.innerHTML = '<button class="integrated-menu-trigger" type="button" aria-expanded="false" aria-controls="integrated-menu-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"></path></svg><span>Menú</span></button><div class="integrated-menu-panel" id="integrated-menu-panel" role="menu" aria-label="Menú del panorama"></div>';
+            const trigger = menu.querySelector('.integrated-menu-trigger');
+            const panel = menu.querySelector('.integrated-menu-panel');
+            menuLinks.forEach((link) => { link.setAttribute('role', 'menuitem'); panel.append(link); });
+
+            const logout = document.createElement('button');
+            logout.type = 'button';
+            logout.className = 'btn integrated-logout';
+            logout.setAttribute('aria-label', 'Cerrar sesión');
+            logout.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M10 17l5-5-5-5M15 12H3M21 19V5a2 2 0 0 0-2-2h-5"></path></svg> Cerrar sesión';
+            logout.addEventListener('click', () => { sessionStorage.removeItem('panorama_access_token'); sessionStorage.clear(); window.location.replace('login.html'); });
+
+            toolbar.classList.add('integrated-toolbar');
+            toolbar.replaceChildren(menu, ...visibleButtons, logout);
+            const closeMenu = () => { menu.classList.remove('open'); trigger.setAttribute('aria-expanded', 'false'); };
+            trigger.addEventListener('click', () => { const isOpen = menu.classList.toggle('open'); trigger.setAttribute('aria-expanded', String(isOpen)); });
+            document.addEventListener('pointerdown', (event) => { if (!menu.contains(event.target)) closeMenu(); });
+            document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeMenu(); });
+          }
+          window.setTimeout(startIntegratedPanel, 0);
+        })();
+      `;
+
+      try {
+        const template = JSON.parse(templateElement.textContent);
+        if (template.includes('integratedPanelReady')) return;
+        const injectedTag = '<script>' + integratedPanelCode + '<' + '/script>';
+        templateElement.textContent = JSON.stringify(template.replace('</body>', injectedTag + '</body>'));
+      } catch (error) {
+        console.warn('No se pudieron integrar las acciones del panorama.', error);
+      }
+    })();
+
     function enhanceLoading() {
       const loader = document.getElementById('loading');
       if (!loader || loader.dataset.loadingReady === 'true') return false;
