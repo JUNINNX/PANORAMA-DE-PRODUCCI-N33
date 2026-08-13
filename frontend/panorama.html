@@ -313,12 +313,10 @@ document.addEventListener('DOMContentLoaded', async function() {
             const actions = Array.from(toolbar.children);
             const menuLinks = actions.filter((action) => action.matches('a[href]'));
             const visibleButtons = actions.filter((action) => !menuLinks.includes(action));
-            const menu = document.createElement('div');
-            menu.className = 'integrated-menu';
-            menu.innerHTML = '<button class="integrated-menu-trigger" type="button" aria-expanded="false" aria-controls="integrated-menu-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"></path></svg><span>Menú</span></button><div class="integrated-menu-panel" id="integrated-menu-panel" role="menu" aria-label="Menú del panorama"></div>';
-            const trigger = menu.querySelector('.integrated-menu-trigger');
-            const panel = menu.querySelector('.integrated-menu-panel');
-            menuLinks.forEach((link) => { link.setAttribute('role', 'menuitem'); panel.append(link); });
+            menuLinks.forEach((link) => {
+              link.classList.add('btn');
+              link.classList.remove('integrated-menu-item');
+            });
 
             const logout = document.createElement('button');
             logout.type = 'button';
@@ -328,11 +326,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             logout.addEventListener('click', () => { sessionStorage.removeItem('panorama_access_token'); sessionStorage.clear(); window.location.replace('login.html'); });
 
             toolbar.classList.add('integrated-toolbar');
-            toolbar.replaceChildren(menu, ...visibleButtons, logout);
-            const closeMenu = () => { menu.classList.remove('open'); trigger.setAttribute('aria-expanded', 'false'); };
-            trigger.addEventListener('click', () => { const isOpen = menu.classList.toggle('open'); trigger.setAttribute('aria-expanded', String(isOpen)); });
-            document.addEventListener('pointerdown', (event) => { if (!menu.contains(event.target)) closeMenu(); });
-            document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeMenu(); });
+            toolbar.replaceChildren(...menuLinks, ...visibleButtons, logout);
           }
           window.setTimeout(startIntegratedPanel, 0);
         })();
@@ -387,23 +381,14 @@ document.addEventListener('DOMContentLoaded', async function() {
       const actions = Array.from(toolbar.children);
       const links = actions.filter((action) => action.matches('a[href]'));
       const buttons = actions.filter((action) => !links.includes(action));
-      if (!links.length) return false;
 
       toolbar.dataset.integratedReady = 'true';
       toolbar.classList.add('integrated-toolbar');
 
-      const menu = document.createElement('div');
-      menu.className = 'integrated-menu';
-      menu.innerHTML = `
-        <button class="integrated-menu-trigger" type="button" aria-expanded="false" aria-controls="integrated-menu-panel">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"></path></svg><span>Menú</span>
-        </button>
-        <div class="integrated-menu-panel" id="integrated-menu-panel" role="menu" aria-label="Menú del panorama"></div>
-      `;
-
-      const trigger = menu.querySelector('.integrated-menu-trigger');
-      const panel = menu.querySelector('.integrated-menu-panel');
-      links.forEach((link) => { link.setAttribute('role', 'menuitem'); panel.append(link); });
+      links.forEach((link) => {
+        link.classList.add('btn');
+        link.classList.remove('integrated-menu-item');
+      });
 
       const logout = document.createElement('button');
       logout.type = 'button';
@@ -412,12 +397,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       logout.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M10 17l5-5-5-5M15 12H3M21 19V5a2 2 0 0 0-2-2h-5"></path></svg> Cerrar sesión`;
       logout.addEventListener('click', () => { sessionStorage.removeItem('panorama_access_token'); sessionStorage.clear(); window.location.replace('login.html'); });
 
-      toolbar.replaceChildren(menu, ...buttons, logout);
-      const close = (focus) => { menu.classList.remove('open'); trigger.setAttribute('aria-expanded', 'false'); if (focus) trigger.focus(); };
-      trigger.addEventListener('click', () => { const open = menu.classList.toggle('open'); trigger.setAttribute('aria-expanded', String(open)); });
-      trigger.addEventListener('keydown', (event) => { if (event.key === 'ArrowDown') { event.preventDefault(); menu.classList.add('open'); trigger.setAttribute('aria-expanded', 'true'); panel.querySelector('[role="menuitem"]')?.focus(); } });
-      document.addEventListener('pointerdown', (event) => { if (!menu.contains(event.target)) close(false); });
-      document.addEventListener('keydown', (event) => { if (event.key === 'Escape') close(true); });
+      toolbar.replaceChildren(...links, ...buttons, logout);
       return true;
     }
 
