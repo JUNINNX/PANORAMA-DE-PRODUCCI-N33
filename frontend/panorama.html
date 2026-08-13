@@ -231,10 +231,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
     // Add a small return-to-menu button without changing the Panorama design.
-    const menuStyle = `<style id="return-menu-style">#returnMenuButton{position:fixed;top:24px;left:24px;z-index:1000001;border:1px solid #d5d9df;border-radius:8px;padding:10px 15px;background:#fff;color:#111827;font:700 13px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.08)}#returnMenuButton:hover{border-color:#c9151e;color:#c9151e}</style>`;
-    const menuButton = `<button id="returnMenuButton" type="button" aria-label="Volver al menú">← MENÚ</button><script>document.addEventListener("click",function(e){if(e.target&&e.target.id==="returnMenuButton")window.location.href="menu.html"});<\/script>`;
-    template = template.replace(/<\/head>/i, menuStyle + '</head>');
-    template = template.replace(/<body([^>]*)>/i, '<body$1>' + menuButton);
+    // El botón MENÚ se inserta después de que el Panorama haya renderizado,
+    // dentro de la misma barra de botones y con el mismo estilo de COMERCIAL.
+
 
     // Parse the template and swap the root element. Scripts inserted via
     // DOMParser/replaceWith are inert per spec — re-create each with
@@ -265,6 +264,29 @@ document.addEventListener('DOMContentLoaded', async function() {
     if (window.Babel && typeof window.Babel.transformScriptTags === 'function') {
       window.Babel.transformScriptTags();
     }
+
+    (() => {
+      const addMenuButton = () => {
+        if (document.getElementById('__returnMenuButton')) return true;
+        const buttons = Array.from(document.querySelectorAll('button'));
+        const commercial = buttons.find(b => /COMERCIAL/i.test((b.textContent || '').trim()));
+        if (!commercial) return false;
+        const menu = commercial.cloneNode(true);
+        menu.id = '__returnMenuButton';
+        menu.setAttribute('aria-label', 'Volver al menú');
+        menu.textContent = '←  MENÚ';
+        menu.addEventListener('click', () => { window.location.href = 'menu.html'; });
+        commercial.parentNode.insertBefore(menu, commercial);
+        return true;
+      };
+      if (!addMenuButton()) {
+        const observer = new MutationObserver(() => {
+          if (addMenuButton()) observer.disconnect();
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+        setTimeout(() => observer.disconnect(), 15000);
+      }
+    })();
   } catch (err) {
     setStatus('Error unpacking: ' + err.message);
     console.error('Bundle unpack error:', err);
