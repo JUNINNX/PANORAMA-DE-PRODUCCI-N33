@@ -292,7 +292,19 @@ document.addEventListener('DOMContentLoaded', async function() {
           menu.id = '__returnMenuButton';
           menu.setAttribute('aria-label', 'Volver al menú');
           menu.textContent = '←  MENÚ';
-          menu.onclick = () => { window.location.href = 'menu.html'; };
+          menu.onclick = () => {
+            // Mostrar la MISMA pantalla roja de carga antes de volver al menú.
+            const loader = document.getElementById('__bundler_thumbnail');
+            if (loader) {
+              loader.style.display = 'flex';
+              loader.style.visibility = 'visible';
+              loader.style.opacity = '1';
+              loader.style.pointerEvents = 'all';
+              loader.style.zIndex = '999999';
+            }
+            // Pequeña pausa para que el usuario alcance a ver la carga roja.
+            setTimeout(() => { window.location.href = 'menu.html'; }, 350);
+          };
           // Put it immediately beside CERRAR SESIÓN, preserving the Panorama toolbar.
           closeButton.parentNode.insertBefore(menu, closeButton);
           return true;
@@ -308,7 +320,19 @@ document.addEventListener('DOMContentLoaded', async function() {
           menu.textContent = '←  MENÚ';
           menu.style.right = '150px';
           menu.style.top = '16px';
-          menu.onclick = () => { window.location.href = 'menu.html'; };
+          menu.onclick = () => {
+            // Mostrar la MISMA pantalla roja de carga antes de volver al menú.
+            const loader = document.getElementById('__bundler_thumbnail');
+            if (loader) {
+              loader.style.display = 'flex';
+              loader.style.visibility = 'visible';
+              loader.style.opacity = '1';
+              loader.style.pointerEvents = 'all';
+              loader.style.zIndex = '999999';
+            }
+            // Pequeña pausa para que el usuario alcance a ver la carga roja.
+            setTimeout(() => { window.location.href = 'menu.html'; }, 350);
+          };
           logout.parentNode.insertBefore(menu, logout);
           return true;
         }
