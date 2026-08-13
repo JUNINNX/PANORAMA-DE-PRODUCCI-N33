@@ -268,17 +268,39 @@ document.addEventListener('DOMContentLoaded', async function() {
     (() => {
       const addMenuButton = () => {
         if (document.getElementById('__returnMenuButton')) return true;
+
+        // Find the real CERRAR SESIÓN button rendered by the Panorama toolbar.
         const buttons = Array.from(document.querySelectorAll('button'));
-        const commercial = buttons.find(b => /COMERCIAL/i.test((b.textContent || '').trim()));
-        if (!commercial) return false;
-        const menu = commercial.cloneNode(true);
-        menu.id = '__returnMenuButton';
-        menu.setAttribute('aria-label', 'Volver al menú');
-        menu.textContent = '←  MENÚ';
-        menu.addEventListener('click', () => { window.location.href = 'menu.html'; });
-        commercial.parentNode.insertBefore(menu, commercial);
-        return true;
+        const closeButton = buttons.find(b => /CERRAR\s+SESI[ÓO]N/i.test((b.textContent || '').trim()));
+
+        if (closeButton) {
+          const menu = closeButton.cloneNode(true);
+          menu.id = '__returnMenuButton';
+          menu.setAttribute('aria-label', 'Volver al menú');
+          menu.textContent = '←  MENÚ';
+          menu.onclick = () => { window.location.href = 'menu.html'; };
+          // Put it immediately beside CERRAR SESIÓN, preserving the Panorama toolbar.
+          closeButton.parentNode.insertBefore(menu, closeButton);
+          return true;
+        }
+
+        // Fallback: if the toolbar is rendered differently, place it beside the
+        // existing fixed logout button without changing the rest of the page.
+        const logout = document.getElementById('logoutButton');
+        if (logout) {
+          const menu = logout.cloneNode(true);
+          menu.id = '__returnMenuButton';
+          menu.setAttribute('aria-label', 'Volver al menú');
+          menu.textContent = '←  MENÚ';
+          menu.style.right = '150px';
+          menu.style.top = '16px';
+          menu.onclick = () => { window.location.href = 'menu.html'; };
+          logout.parentNode.insertBefore(menu, logout);
+          return true;
+        }
+        return false;
       };
+
       if (!addMenuButton()) {
         const observer = new MutationObserver(() => {
           if (addMenuButton()) observer.disconnect();
