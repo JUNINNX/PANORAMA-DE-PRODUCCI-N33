@@ -623,7 +623,11 @@ button.login-button:disabled{opacity:.65;cursor:wait;transform:none}
 
 <script>
 /* Mantiene exactamente la lógica de conexión y autenticación del login original. */
-const API_BASE = '/api';
+// IMPORTANTE: reemplaza esta URL por la de tu servicio real en Render.
+// Si backend y frontend se sirven desde el MISMO servidor Express (modo local),
+// deja API_BASE = '/api'. Si el frontend vive en Netlify (dominio distinto
+// al backend en Render), DEBE ser la URL completa del backend.
+const API_BASE = 'https://TU-BACKEND.onrender.com/api';
 
 /* Mostrar / ocultar contraseña */
 document
@@ -655,7 +659,7 @@ if(sessionStorage.getItem('panorama_access_token')){
   )
   .then(response => {
     if(response.ok){
-      window.location.replace('panorama.html');
+      window.location.replace('menu.html');
     }else{
       sessionStorage.removeItem('panorama_access_token');
     }
@@ -712,7 +716,7 @@ document
         data.token
       );
 
-      window.location.replace('panorama.html');
+      window.location.replace('menu.html');
 
     }catch(err){
       error.textContent =
