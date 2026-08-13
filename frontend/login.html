@@ -32,15 +32,18 @@ body{
   transform:rotate(45deg);right:-250px;bottom:-260px;
 }
 .vcontent{position:relative;z-index:2;max-width:560px}
-.mark{
-  width:60px;height:60px;background:var(--red);border-radius:7px;position:relative;margin-bottom:28px;
-  box-shadow:0 15px 35px rgba(201,21,30,.25)
+.campana-logo{
+  width:max-content;display:grid;grid-template-columns:62px auto;grid-template-rows:auto auto;
+  column-gap:13px;align-items:end;margin-bottom:32px;
 }
-.mark:before,.mark:after{content:"";position:absolute;background:#fff}
-.mark:before{width:29px;height:6px;left:15px;top:18px;transform:skew(-27deg)}
-.mark:after{width:29px;height:6px;left:15px;top:34px;transform:skew(27deg)}
-.brand{font:800 64px/.88 'Barlow Condensed',sans-serif;letter-spacing:.02em}
-.brand span{display:block;color:#d2d6d9;font:500 22px/1.1 'Barlow Condensed',sans-serif;letter-spacing:.18em;margin-top:12px}
+.campana-bars{width:62px;height:62px;display:flex;align-items:flex-end;gap:4px}
+.campana-bars i{display:block;background:var(--red);width:10px;transform:skewY(-18deg);box-shadow:0 8px 18px rgba(201,21,30,.22)}
+.campana-bars i:nth-child(1){height:25px}.campana-bars i:nth-child(2){height:40px}
+.campana-bars i:nth-child(3){height:55px}.campana-bars i:nth-child(4){height:48px}
+.campana-logo b{font:800 28px/1 'Barlow Condensed',sans-serif;letter-spacing:.02em}
+.campana-logo small{grid-column:2;font:500 9px/1 'Inter',sans-serif;letter-spacing:.24em;color:#bfc5ca;margin-top:5px}
+.brand{font:800 58px/.88 'Barlow Condensed',sans-serif;letter-spacing:.02em}
+.brand span{display:block;color:var(--red);font:700 25px/1.05 'Barlow Condensed',sans-serif;letter-spacing:.16em;margin-top:10px}
 .statement{
   margin-top:28px;padding-left:18px;border-left:4px solid var(--red);color:#bfc5ca;
   line-height:1.65;font-size:14px;max-width:470px;
@@ -95,11 +98,11 @@ input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(201,21,30,.08);bac
 <body>
 <section class="visual">
   <div class="vcontent">
-    <div class="mark" aria-hidden="true"></div>
-    <div class="brand">LA CAMPANA<span>SERVICIOS DE ACERO</span></div>
-    <div class="statement">Acceso a la plataforma interna de producción. Una experiencia visual inspirada en la solidez del acero, la precisión de los procesos y el carácter corporativo de La Campana.</div>
+    <div class="campana-logo" aria-label="La Campana"><span class="campana-bars"><i></i><i></i><i></i><i></i></span><b>LA CAMPANA</b><small>SERVICIOS DE ACERO</small></div>
+    <div class="brand">DASHBOARD <span>GERENCIAL</span></div>
+    <div class="statement">Acceso a la plataforma interna de gestión. Una interfaz corporativa inspirada en la solidez del acero, la precisión de los procesos y la identidad de La Campana.</div>
   </div>
-  <div class="visual-bottom">HECHO PARA DURAR · <strong>CONTROL · EFICIENCIA · CALIDAD</strong></div>
+  <div class="visual-bottom">LA CAMPANA · <strong>CONTROL · EFICIENCIA · CALIDAD</strong></div>
 </section>
 <main class="login-area">
   <div class="login-box">
@@ -123,7 +126,7 @@ input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(201,21,30,.08);bac
         <div id="error" class="error"></div>
       </form>
     </section>
-    <div class="footer">Sistema interno · La Campana Servicios de Acero</div>
+    <div class="footer">Dashboard Gerencial · La Campana</div>
   </div>
 </main>
 <script>
