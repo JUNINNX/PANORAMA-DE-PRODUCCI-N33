@@ -37,13 +37,8 @@ body:before{
   padding:14px 0 20px;border-bottom:1px solid var(--line);margin-bottom:54px;
 }
 .brand{display:flex;align-items:center;gap:15px}
-.brand-mark{
-  width:52px;height:52px;border-radius:8px;background:var(--red);position:relative;
-  box-shadow:0 8px 20px rgba(157,13,20,.22);
-}
-.brand-mark:before,.brand-mark:after{content:"";position:absolute;background:#fff}
-.brand-mark:before{width:25px;height:5px;left:13px;top:15px;transform:skew(-27deg)}
-.brand-mark:after{width:25px;height:5px;left:13px;top:28px;transform:skew(27deg)}
+.brand-mark{width:52px;height:52px;border-radius:8px;background:var(--red);position:relative;box-shadow:0 8px 20px rgba(157,13,20,.22)}
+.brand-mark{display:flex;align-items:flex-end;justify-content:center;gap:3px;padding:10px 9px}.brand-mark i{display:block;background:#fff;width:6px;transform:skewY(-18deg)}.brand-mark i:nth-child(1){height:15px}.brand-mark i:nth-child(2){height:26px}.brand-mark i:nth-child(3){height:35px}.brand-mark i:nth-child(4){height:30px}
 .brand-name{font:800 30px/1 'Barlow Condensed',sans-serif;letter-spacing:.04em}
 .brand-sub{display:block;color:var(--muted);font-size:10px;letter-spacing:.18em;margin-top:4px;text-transform:uppercase}
 #logoutButton{
@@ -51,20 +46,10 @@ body:before{
   padding:11px 17px;font-weight:700;cursor:pointer;transition:.2s;
 }
 #logoutButton:hover{border-color:var(--red);color:var(--red);transform:translateY(-1px)}
-.hero{display:grid;grid-template-columns:1.3fr .7fr;gap:36px;align-items:end;margin-bottom:38px}
+.hero{display:block;margin-bottom:38px}
 .kicker{color:var(--red);font-size:12px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;margin:0 0 9px}
 h1{font:800 clamp(42px,6vw,70px)/.9 'Barlow Condensed',sans-serif;text-transform:uppercase;margin:0;letter-spacing:.01em}
 .hero-copy{color:var(--muted);max-width:680px;line-height:1.65;margin:16px 0 0;font-size:14px}
-.hero-side{
-  background:#111418;color:#fff;padding:24px;border-left:5px solid var(--red);
-  box-shadow:0 15px 35px rgba(0,0,0,.12);position:relative;overflow:hidden;
-}
-.hero-side:after{
-  content:"";position:absolute;width:180px;height:180px;border:1px solid rgba(255,255,255,.13);
-  transform:rotate(45deg);right:-80px;top:-80px;
-}
-.hero-side strong{display:block;font:700 31px/1 'Barlow Condensed',sans-serif;text-transform:uppercase}
-.hero-side span{display:block;color:#b9c0c6;font-size:12px;margin-top:7px}
 .section-title{
   display:flex;align-items:center;gap:15px;margin:0 0 17px;
   font:700 25px 'Barlow Condensed',sans-serif;text-transform:uppercase;
@@ -100,7 +85,7 @@ h1{font:800 clamp(42px,6vw,70px)/.9 'Barlow Condensed',sans-serif;text-transform
 .footerline{margin-top:38px;padding-top:17px;border-top:1px solid var(--line);display:flex;justify-content:space-between;color:#7b838b;font-size:11px;letter-spacing:.08em;text-transform:uppercase}
 @media(max-width:760px){
   .shell{width:min(100% - 24px,1180px);padding-top:14px}
-  .topbar{margin-bottom:36px}.hero{grid-template-columns:1fr;gap:18px}
+  .topbar{margin-bottom:36px}
   .grid{grid-template-columns:1fr}.brand-name{font-size:25px}
 }
 </style>
@@ -110,8 +95,8 @@ h1{font:800 clamp(42px,6vw,70px)/.9 'Barlow Condensed',sans-serif;text-transform
 <div class="shell">
 <header class="topbar">
   <div class="brand">
-    <div class="brand-mark" aria-hidden="true"></div>
-    <div><div class="brand-name">LA CAMPANA</div><span class="brand-sub">Servicios de Acero · Sistema interno</span></div>
+    <div class="brand-mark" aria-label="La Campana"><i></i><i></i><i></i><i></i></div>
+    <div><div class="brand-name">DASHBOARD GERENCIAL</div><span class="brand-sub">La Campana · Plataforma interna</span></div>
   </div>
   <button id="logoutButton" type="button">Cerrar sesión</button>
 </header>
@@ -119,11 +104,9 @@ h1{font:800 clamp(42px,6vw,70px)/.9 'Barlow Condensed',sans-serif;text-transform
 <section class="hero">
   <div>
     <p class="kicker">Plataforma interna</p>
-    <h1>Control y<br>producción</h1>
-    <p class="hero-copy">Accede a las herramientas operativas para consultar el panorama de producción y administrar los módulos del sistema.</p>
-  </div>
-  <div class="hero-side"><strong>Hecho para durar</strong><span>Una interfaz inspirada en el carácter industrial, la precisión y la solidez de La Campana.</span></div>
-</section>
+    <h1>Dashboard<br>Gerencial</h1>
+    <p class="hero-copy">Accede a las herramientas de información y gestión para consultar indicadores, producción y resultados de la empresa.</p>
+  </div></section>
 
 <section>
   <h2 class="section-title">Módulos disponibles</h2>
@@ -141,7 +124,7 @@ h1{font:800 clamp(42px,6vw,70px)/.9 'Barlow Condensed',sans-serif;text-transform
     </a>
   </div>
 </section>
-<div class="footerline"><span>La Campana · Servicios de Acero</span><span>Control · Eficiencia · Calidad</span></div>
+<div class="footerline"><span>Dashboard Gerencial · La Campana</span><span>Control · Eficiencia · Calidad</span></div>
 </div>
 <script>
 const API_BASE = 'https://panorama-de-producci-n33.onrender.com/api';
