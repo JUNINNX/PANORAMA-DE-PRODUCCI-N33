@@ -230,6 +230,12 @@ document.addEventListener('DOMContentLoaded', async function() {
       template = template.slice(0, i) + resourceScript + template.slice(i);
     }
 
+    // Add a small return-to-menu button without changing the Panorama design.
+    const menuStyle = `<style id="return-menu-style">#returnMenuButton{position:fixed;top:24px;left:24px;z-index:1000001;border:1px solid #d5d9df;border-radius:8px;padding:10px 15px;background:#fff;color:#111827;font:700 13px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.08)}#returnMenuButton:hover{border-color:#c9151e;color:#c9151e}</style>`;
+    const menuButton = `<button id="returnMenuButton" type="button" aria-label="Volver al menú">← MENÚ</button><script>document.addEventListener("click",function(e){if(e.target&&e.target.id==="returnMenuButton")window.location.href="menu.html"});<\/script>`;
+    template = template.replace(/<\/head>/i, menuStyle + '</head>');
+    template = template.replace(/<body([^>]*)>/i, '<body$1>' + menuButton);
+
     // Parse the template and swap the root element. Scripts inserted via
     // DOMParser/replaceWith are inert per spec — re-create each with
     // createElement so they execute, awaiting onload for src scripts to
