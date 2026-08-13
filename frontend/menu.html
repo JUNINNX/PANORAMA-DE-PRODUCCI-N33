@@ -226,11 +226,44 @@ h1{
 .card.disabled:before{background:#b8bdc2}
 .card.disabled .module-icon{color:#8b9298}
 .card.disabled .module-arrow{display:none}
+
+/* AJUSTE DE PROPORCIONES Y FOOTER */
+.shell{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+.section{
+  width:calc(100% - 64px);
+  max-width:none;
+  margin:28px auto 0;
+}
+.grid{
+  gap:22px;
+}
+.card{
+  min-height:190px;
+}
+.footerline{
+  width:calc(100% - 64px);
+  margin:32px auto 22px;
+  padding-top:16px;
+  border-top:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  color:#747a80;
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:.11em;
+  text-transform:uppercase;
+}
+
 @media(max-width:760px){
   .topbar{min-height:66px;padding:0 16px}.brand-mark{width:125px}.brand-mark img{width:122px}
   #logoutButton{padding:0 11px}.hero{padding:28px 20px 31px}h1{font-size:32px}
   .section{width:calc(100% - 28px);margin-top:24px}.grid{grid-template-columns:1fr}.card{min-height:160px;padding:22px 54px 22px 22px;gap:16px}.module-icon{width:60px;height:60px;flex-basis:60px}.module-icon svg{width:29px;height:29px}.card h2{font-size:25px}.module-arrow{right:14px}
-  .footerline{width:calc(100% - 28px);flex-direction:column;gap:7px}
+  .footerline{width:calc(100% - 28px);margin:28px auto 18px;flex-direction:column;align-items:flex-start;gap:7px}
 }
 </style>
   <link rel="icon" type="image/png" sizes="292x379" href="data:image/png;base64,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">
