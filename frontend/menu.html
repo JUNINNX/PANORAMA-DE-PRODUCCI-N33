@@ -280,15 +280,12 @@ document.addEventListener('click', () => {
 
 function pintarUsuario(data){
   const usuario = data?.usuario || data?.user || data?.data || data || {};
-  const nombre = usuario.nombre || usuario.name || usuario.nombre_completo || usuario.email || 'Usuario';
-  const rol = usuario.rol || usuario.role || usuario.perfil || 'Cuenta activa';
-  const email = '';
-  const inicial = String(nombre).trim().charAt(0).toUpperCase() || 'U';
-  document.getElementById('userName').textContent = nombre;
-  document.getElementById('userRole').textContent = rol;
-  document.getElementById('userAvatar').textContent = inicial;
-  document.getElementById('userMenuName').textContent = nombre;
-  document.getElementById('userMenuEmail').textContent = email;
+  const rol = usuario.rol || usuario.role || usuario.perfil || 'Administrador';
+  const etiqueta = String(rol).trim() || 'Administrador';
+
+  document.getElementById('userName').textContent = etiqueta;
+  document.getElementById('userAvatar').textContent =
+    etiqueta.charAt(0).toUpperCase();
 }
 
 async function verificarSesion(){
@@ -310,9 +307,11 @@ async function verificarSesion(){
     const data = await response.json().catch(() => ({}));
     pintarUsuario(data);
     document.getElementById('authChecking').remove();
-  }catch{
-    document.getElementById('authChecking').textContent =
-      'No se pudo conectar con el servidor. Verifica tu conexión.';
+  }catch(error){
+    console.error('Error verificando sesión:', error);
+    document.getElementById('authChecking').innerHTML =
+      '<div class="loading-text">No se pudo conectar con el servidor.</div>' +
+      '<div class="loading-sub">Verifica tu conexión e inténtalo nuevamente.</div>';
   }
 }
 
