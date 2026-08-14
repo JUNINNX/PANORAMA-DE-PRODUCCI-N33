@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#c9151e">
-<title>Dashboard Gerencial · La Campana</title>
+<title>La Campana · Acceso</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box}
-html,body{margin:0;width:100%;min-height:100%;font-family:Inter,Arial,sans-serif}
+html,body{margin:0;width:100%;min-height:100%;font-family:Nunito,Arial,sans-serif}
 :root{--red:#c9151e;--red-dark:#aa1017;--text:#202326;--muted:#777d82;--border:#d8dadd}
 body{
   min-height:100vh;background:
@@ -20,14 +20,14 @@ body{
   overflow-x:hidden;padding:28px;
 }
 
-.page{width:min(100%,470px);position:relative;z-index:2}
-.brand{text-align:center;margin-bottom:34px}
+.page{width:min(100%,420px);position:relative;z-index:2}
+.brand{text-align:center;margin-bottom:30px}
 .logo{width:min(300px,78vw);height:auto;display:block;margin:0 auto}
 .title{text-align:center;color:#fff;margin-bottom:20px}
-.title h1{margin:0;font-size:27px;line-height:1.15;font-weight:800;letter-spacing:-.03em}
+.title h1{margin:0;font-size:25px;line-height:1.15;font-weight:800;letter-spacing:-.02em}
 .title p{margin:7px 0 0;color:rgba(255,255,255,.82);font-size:13px}
 .card{
-  background:#f8f8f8;border-radius:16px;padding:29px 28px 25px;
+  background:#f8f8f8;border-radius:16px;padding:36px 28px 34px;min-height:390px;
   box-shadow:0 20px 50px rgba(92,0,6,.28);
 }
 .card h2{margin:0;color:var(--text);font-size:21px;line-height:1.2;font-weight:800}
@@ -70,10 +70,11 @@ input:focus{border-color:#b7babe;box-shadow:0 0 0 3px rgba(201,21,30,.08)}
   .page{width:100%}
   .brand{margin-bottom:27px}
   .logo{width:min(310px,82vw)}
-  .card{padding:25px 20px 22px;border-radius:15px}
+  .card{padding:32px 20px 30px;border-radius:15px;min-height:380px}
   .title h1{font-size:23px}
 }
 </style>
+  <link rel="icon" type="image/png" sizes="292x379" href="data:image/png;base64,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">
 </head>
 <body>
 <main class="page">
