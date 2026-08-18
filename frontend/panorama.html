@@ -3,16 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panorama de Producción</title>
+    <title>Panorama de Producción - La Campana</title>
     <style>
-        /* Base y Layout */
-        body {
-            margin: 0;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background-color: #f4f6f9;
-        }
-
-        /* Overlay de comprobación inicial */
+        /* Pantallas de Carga */
         #auth-overlay, #__bundler_thumbnail {
             position: fixed;
             top: 0;
@@ -24,6 +17,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            font-family: system-ui, -apple-system, sans-serif;
             font-size: 1.25rem;
             font-weight: 600;
             z-index: 99999;
@@ -34,164 +28,140 @@
             z-index: 99998;
         }
 
-        /* Header Rojo con Perfil */
-        .top-bar {
-            background-color: #d5101b;
-            height: 60px;
-            padding: 0 24px;
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            position: relative;
+        /* Botón de SAP personalizado */
+        .btn-cargar-sap {
+            background-color: #d5101b !important;
+            color: #ffffff !important;
+            border: none !important;
+            padding: 8px 16px !important;
+            border-radius: 6px !important;
+            font-weight: 700 !important;
+            font-size: 0.85rem !important;
+            cursor: pointer !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 6px !important;
+            transition: background-color 0.2s !important;
+            text-transform: UPPERCASE !important;
         }
 
-        /* Menu Desplegable Perfil */
-        .profile-container {
-            position: relative;
-            cursor: pointer;
-            user-select: none;
+        .btn-cargar-sap:hover {
+            background-color: #b00d16 !important;
         }
 
-        .profile-trigger {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #ffffff;
-            font-weight: 700;
-            font-size: 1rem;
-        }
-
-        .avatar-circle {
-            width: 38px;
-            height: 38px;
-            background-color: #ffffff;
-            color: #d5101b;
-            border-radius: 50%;
-            display: flex;
+        /* Modal para Selección de Fechas SAP */
+        .sap-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
             justify-content: center;
             align-items: center;
-            font-size: 1.2rem;
-            font-weight: bold;
+            z-index: 99999;
+            font-family: system-ui, -apple-system, sans-serif;
         }
 
-        .dropdown-menu {
-            position: absolute;
-            top: calc(100% + 8px);
-            right: 0;
-            background-color: #ffffff;
+        .sap-modal-content {
+            background: #ffffff;
+            padding: 24px;
             border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-            width: 180px;
-            display: none;
-            flex-direction: column;
-            overflow: hidden;
-            z-index: 1000;
+            width: 340px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
 
-        .dropdown-menu.show {
-            display: flex;
-        }
-
-        .dropdown-item {
-            padding: 12px 20px;
+        .sap-modal-title {
+            margin-top: 0;
+            margin-bottom: 16px;
             color: #d5101b;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .sap-field-group {
+            margin-bottom: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .sap-field-group label {
+            font-size: 0.85rem;
             font-weight: 600;
-            font-size: 0.95rem;
-            text-decoration: none;
-            background: none;
-            border: none;
-            text-align: left;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            color: #444;
         }
 
-        .dropdown-item:hover {
-            background-color: #f5f5f5;
-        }
-
-        .dropdown-divider {
-            height: 1px;
-            background-color: #eee;
-            margin: 0;
-        }
-
-        /* Sección de Búsqueda / Acciones SAP */
-        .sap-actions-bar {
-            background-color: #ffffff;
-            padding: 16px 24px;
-            border-bottom: 1px solid #e0e0e0;
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-
-        .sap-input {
+        .sap-field-group input {
             padding: 8px 12px;
             border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 0.95rem;
-            width: 250px;
+            border-radius: 6px;
+            font-size: 0.9rem;
         }
 
-        .btn-sap {
-            padding: 8px 16px;
-            background-color: #d5101b;
-            color: #ffffff;
+        .sap-modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-modal-cancel {
+            background: #e0e0e0;
+            color: #333;
             border: none;
-            border-radius: 4px;
-            font-weight: bold;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.2s;
         }
 
-        .btn-sap:hover {
-            background-color: #b00d16;
+        .btn-modal-confirm {
+            background: #d5101b;
+            color: #fff;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-    <!-- Overlays -->
+    <!-- Overlays de Carga -->
     <div id="auth-overlay">Comprobando sesión...</div>
     <div id="__bundler_thumbnail">Cargando menú...</div>
 
-    <!-- Barra Superior con Perfil de Usuario -->
-    <header class="top-bar">
-        <div class="profile-container" id="profileContainer">
-            <div class="profile-trigger">
-                <div class="avatar-circle">A</div>
-                <span id="usernameDisplay">admin</span>
-                <small>^</small>
-            </div>
+    <!-- Modal de Selección de Fechas -->
+    <div class="sap-modal-overlay" id="sapDateModal">
+        <div class="sap-modal-content">
+            <h3 class="sap-modal-title">Consultar Rango en SAP</h3>
             
-            <div class="dropdown-menu" id="profileDropdown">
-                <button class="dropdown-item" id="btnGoMenu">
-                    ← Volver al Menú
-                </button>
-                <div class="dropdown-divider"></div>
-                <button class="dropdown-item" id="btnLogout">
-                    Cerrar sesión
-                </button>
+            <div class="sap-field-group">
+                <label for="sapFechaInicio">Fecha de Inicio:</label>
+                <input type="date" id="sapFechaInicio">
+            </div>
+
+            <div class="sap-field-group">
+                <label for="sapFechaFin">Fecha de Fin:</label>
+                <input type="date" id="sapFechaFin">
+            </div>
+
+            <div class="sap-modal-actions">
+                <button class="btn-modal-cancel" id="btnCerrarModalSAP">Cancelar</button>
+                <button class="btn-modal-confirm" id="btnBuscarSAP">Consultar</button>
             </div>
         </div>
-    </header>
+    </div>
 
-    <!-- Barra de Búsqueda y Acciones para SAP -->
-    <section class="sap-actions-bar">
-        <input type="text" id="sapSearchInput" class="sap-input" placeholder="Buscar en SAP (ej. Orden, Código)...">
-        <button class="btn-sap" id="btnConsultarSAP">Consultar SAP</button>
-    </section>
+    <!-- Contenedor del Dashboard de La Campana -->
+    <div id="app"></div>
 
-    <!-- Contenedor Principal para Resultados / App -->
-    <main id="app">
-        <!-- Los datos recibidos de SAP o del bundler se mostrarán aquí -->
-    </main>
-
+    <!-- Script de Autenticación, Inyección de Botón y Modal -->
     <script>
-        // 1. Verificación de Autenticación
+        // 1. Check Auth Session
         (async function checkAuth() {
             const token = sessionStorage.getItem('panorama_access_token');
             if (!token) {
@@ -212,64 +182,70 @@
             }
         })();
 
-        // Prevent Cache Reload
+        // Cache Refresh Guard
         window.addEventListener('pageshow', function (event) {
             if (event.persisted) window.location.reload();
         });
 
-        // 2. Control de Interfaz y Menú Desplegable
+        // 2. Control del Modal de Fechas y Conexión SAP
         document.addEventListener('DOMContentLoaded', () => {
-            const profileContainer = document.getElementById('profileContainer');
-            const profileDropdown = document.getElementById('profileDropdown');
-            const btnGoMenu = document.getElementById('btnGoMenu');
-            const btnLogout = document.getElementById('btnLogout');
+            const modal = document.getElementById('sapDateModal');
+            const btnCerrar = document.getElementById('btnCerrarModalSAP');
+            const btnBuscar = document.getElementById('btnBuscarSAP');
 
-            // Abrir / Cerrar Dropdown del Perfil
-            profileContainer.addEventListener('click', (e) => {
-                e.stopPropagation();
-                profileDropdown.classList.toggle('show');
+            btnCerrar.addEventListener('click', () => {
+                modal.style.display = 'none';
             });
 
-            document.addEventListener('click', () => {
-                profileDropdown.classList.remove('show');
-            });
+            btnBuscar.addEventListener('click', async () => {
+                const fechaInicio = document.getElementById('sapFechaInicio').value;
+                const fechaFin = document.getElementById('sapFechaFin').value;
 
-            // Acción: Volver al Menú
-            btnGoMenu.addEventListener('click', () => {
-                const thumbnail = document.getElementById('__bundler_thumbnail');
-                if (thumbnail) thumbnail.style.display = 'flex';
-                setTimeout(() => {
-                    window.location.href = 'menu.html';
-                }, 300);
-            });
-
-            // Acción: Cerrar Sesión
-            btnLogout.addEventListener('click', () => {
-                sessionStorage.removeItem('panorama_access_token');
-                sessionStorage.clear();
-                window.location.href = 'login.html';
-            });
-
-            // 3. ESTRUCTURA LISTA PARA CONEXIÓN A SAP
-            const btnConsultarSAP = document.getElementById('btnConsultarSAP');
-            btnConsultarSAP.addEventListener('click', async () => {
-                const query = document.getElementById('sapSearchInput').value;
-                if (!query) {
-                    alert('Por favor ingrese un parámetro de búsqueda.');
+                if (!fechaInicio || !fechaFin) {
+                    alert('Por favor seleccione ambas fechas (Inicio y Fin).');
                     return;
                 }
 
-                console.log('Iniciando consulta a SAP con parámetro:', query);
-                await consultarSAP(query);
+                if (fechaInicio > fechaFin) {
+                    alert('La fecha de inicio no puede ser posterior a la fecha fin.');
+                    return;
+                }
+
+                modal.style.display = 'none';
+                await ejecutarCargaDesdeSAP(fechaInicio, fechaFin);
             });
         });
 
-        // Función plantilla para ejecutar llamadas a SAP
-        async function consultarSAP(parametro) {
+        // 3. Sustitución de Botón "CARGAR EXCEL" por "CARGAR DESDE SAP"
+        function sustituirBotonExcelPorSAP() {
+            const elementos = document.querySelectorAll('button, a, div');
+            
+            elementos.forEach(el => {
+                if (el.textContent && el.textContent.toUpperCase().includes('CARGAR EXCEL')) {
+                    const btnSAP = document.createElement('button');
+                    btnSAP.className = 'btn-cargar-sap';
+                    btnSAP.id = 'btnCargarSAP';
+                    btnSAP.innerHTML = '⚡ CARGAR DESDE SAP';
+
+                    btnSAP.addEventListener('click', () => {
+                        document.getElementById('sapDateModal').style.display = 'flex';
+                    });
+
+                    if (el.parentNode) {
+                        el.parentNode.replaceChild(btnSAP, el);
+                    }
+                }
+            });
+        }
+
+        // 4. Función base de Consulta a la API de SAP
+        async function ejecutarCargaDesdeSAP(fechaInicio, fechaFin) {
             const token = sessionStorage.getItem('panorama_access_token');
             
-            // TODO: Reemplazar '/api/sap/endpoint' con tu ruta real de SAP cuando la tengas
-            const SAP_ENDPOINT = '/api/sap/endpoint?query=' + encodeURIComponent(parametro);
+            // TODO: Cuando tengas el endpoint real de tu backend SAP, colócala aquí:
+            const SAP_ENDPOINT = `/api/sap/cargar-datos?fecha_inicio=${fechaInicio}&fecha_fin=${fechaFin}`;
+
+            console.log(`Iniciando sincronización con SAP desde ${fechaInicio} hasta ${fechaFin}...`);
 
             try {
                 /*
@@ -281,35 +257,40 @@
                     }
                 });
 
-                if (!response.ok) throw new Error('Error al obtener datos de SAP');
-                const data = await response.json();
+                if (!response.ok) throw new Error('Error al consultar datos en SAP');
+                const datosSAP = await response.json();
                 
-                // Mostrar datos en el contenedor app
-                document.getElementById('app').innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                alert('¡Datos cargados exitosamente desde SAP!');
+                window.location.reload();
                 */
 
-                alert(`Consulta enviada para "${parametro}". Cuando tengas la URL de SAP, activa el código dentro de la función consultarSAP().`);
+                alert(`Consulta enviada a SAP:\n• Fecha Inicio: ${fechaInicio}\n• Fecha Fin: ${fechaFin}\n\n(Listo para conectar al endpoint cuando lo tengas).`);
 
             } catch (error) {
                 console.error('Error SAP:', error);
-                alert('No se pudo conectar con SAP.');
+                alert('No se pudo completar la carga desde SAP.');
             }
         }
+
+        // Vigilar el DOM para detectar cuando renderiza el botón original
+        const observer = new MutationObserver(() => {
+            sustituirBotonExcelPorSAP();
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
     </script>
 
-    <!-- Payloads Bundler -->
+    <!-- Payloads del Bundler Original (NO BORRAR PARA MANTENER LA CAMPANA) -->
     <script type="__bundler/manifest">
         { "assets": {} }
     </script>
 
     <script type="__bundler/template">
-        <div class="dashboard-container" style="padding: 24px;">
+        <div class="dashboard-container">
             <h1>Panorama de Producción</h1>
-            <p>Módulo listo para conexión con SAP.</p>
         </div>
     </script>
 
-    <!-- Desempaquetador -->
+    <!-- Script Desempaquetador -->
     <script>
         (async function unpackAndRender() {
             try {
@@ -317,16 +298,31 @@
                 const templateScript = document.querySelector('script[type="__bundler/template"]');
                 if (!manifestScript || !templateScript) return;
 
+                const manifest = JSON.parse(manifestScript.textContent);
                 const templateHTML = templateScript.textContent;
+
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(templateHTML, 'text/html');
                 
                 const appContainer = document.getElementById('app');
                 if (appContainer) {
-                    appContainer.appendChild(doc.body.firstChild);
+                    appContainer.innerHTML = doc.body.innerHTML;
                 }
+
+                const scripts = appContainer.querySelectorAll('script');
+                for (const oldScript of scripts) {
+                    const newScript = document.createElement('script');
+                    Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+                    newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+                    oldScript.parentNode.replaceChild(newScript, oldScript);
+                }
+
+                if (window.Babel && typeof window.Babel.transformScriptTags === 'function') {
+                    window.Babel.transformScriptTags();
+                }
+
             } catch (err) {
-                console.error('Error bundler:', err);
+                console.error('Error procesando el bundler:', err);
             }
         })();
     </script>
