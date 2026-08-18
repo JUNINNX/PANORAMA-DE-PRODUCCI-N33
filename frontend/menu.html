@@ -183,7 +183,7 @@ section{
 <section>
   <h2 class="section-title">Módulos disponibles</h2>
     <div class="grid">
-    <a class="card" href="panorama-produccion.html">
+    <a class="card" href="Panorama de Producción(1).html">
       <div class="icon">⌁</div>
       <div>
         <div style="font-size:10px;color:#7b8288;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:7px">Módulo operativo</div>
@@ -192,7 +192,7 @@ section{
       </div>
       <div class="arrow">→</div>
     </a>
-    <a class="card" href="panorama-comercial.html">
+    <a class="card" href="Panorama Comercial(1).html">
       <div class="icon">◉</div>
       <div>
         <div style="font-size:10px;color:#7b8288;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:7px">Módulo comercial</div>
@@ -201,7 +201,7 @@ section{
       </div>
       <div class="arrow">→</div>
     </a>
-    <a class="card" href="hoja-asesor.html">
+    <a class="card" href="Hoja de Asesor(1).html">
       <div class="icon">♙</div>
       <div>
         <div style="font-size:10px;color:#7b8288;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:7px">Módulo comercial</div>
@@ -210,7 +210,7 @@ section{
       </div>
       <div class="arrow">→</div>
     </a>
-    <a class="card" href="hoja-despacho.html">
+    <a class="card" href="Hoja de Despacho(1).html">
       <div class="icon">◷</div>
       <div>
         <div style="font-size:10px;color:#7b8288;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:7px">Módulo operativo</div>
@@ -219,7 +219,7 @@ section{
       </div>
       <div class="arrow">→</div>
     </a>
-    <a class="card" href="hoja-ruta-cliente.html">
+    <a class="card" href="Hoja de Ruta - Cliente(1).html">
       <div class="icon">⌂</div>
       <div>
         <div style="font-size:10px;color:#7b8288;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:7px">Módulo comercial</div>
@@ -228,7 +228,7 @@ section{
       </div>
       <div class="arrow">→</div>
     </a>
-    <a class="card" href="hoja-sede.html">
+    <a class="card" href="Hoja de Sede(1).html">
       <div class="icon">▦</div>
       <div>
         <div style="font-size:10px;color:#7b8288;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:7px">Módulo operativo</div>
@@ -237,7 +237,7 @@ section{
       </div>
       <div class="arrow">→</div>
     </a>
-    <a class="card" href="panorama-produccion-diaria.html">
+    <a class="card" href="Panorama de Producción Diaria(1).html">
       <div class="icon">▥</div>
       <div>
         <div style="font-size:10px;color:#7b8288;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:7px">Módulo operativo</div>
@@ -246,7 +246,7 @@ section{
       </div>
       <div class="arrow">→</div>
     </a>
-    <a class="card" href="panorama-portafolio.html">
+    <a class="card" href="Panorama del Portafolio(1).html">
       <div class="icon">▤</div>
       <div>
         <div style="font-size:10px;color:#7b8288;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:7px">Módulo comercial</div>
@@ -255,7 +255,7 @@ section{
       </div>
       <div class="arrow">→</div>
     </a>
-    <a class="card" href="planeacion-nogales.html">
+    <a class="card" href="Planeacion Nogales(1).html">
       <div class="icon">◫</div>
       <div>
         <div style="font-size:10px;color:#7b8288;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:7px">Módulo operativo</div>
@@ -264,7 +264,7 @@ section{
       </div>
       <div class="arrow">→</div>
     </a>
-    <a class="card" href="costos-produccion.html">
+    <a class="card" href="Costos de Producción(1).html">
       <div class="icon">$</div>
       <div>
         <div style="font-size:10px;color:#7b8288;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:7px">Módulo operativo</div>
@@ -287,7 +287,7 @@ const TOKEN_KEY = 'panorama_access_token';
 
 function cerrarSesion(){
   sessionStorage.removeItem(TOKEN_KEY);
-  window.location.replace('login.html');
+  window.location.replace('index.html');
 }
 
 document.getElementById('logoutButton').addEventListener('click', cerrarSesion);
@@ -321,7 +321,7 @@ function pintarUsuario(data){
 async function verificarSesion(){
   const token = sessionStorage.getItem(TOKEN_KEY);
   if(!token){
-    window.location.replace('login.html');
+    window.location.replace('index.html');
     return;
   }
   try{
@@ -331,7 +331,7 @@ async function verificarSesion(){
     });
     if(!response.ok){
       sessionStorage.removeItem(TOKEN_KEY);
-      window.location.replace('login.html');
+      window.location.replace('index.html');
       return;
     }
     const data = await response.json().catch(() => ({}));
